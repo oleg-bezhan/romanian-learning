@@ -49,6 +49,35 @@ Open Anki, open this folder in your assistant, and write the words you want to l
 
 To change your level, grammar, voice or deck later, type **setup** and say what you'd like to change.
 
+### Find and practise cards by grammar
+
+Every new card gets tags, so you can find cards by the grammar they practise, by word type, or by the day you added them:
+
+| Tag | Example | What it means |
+|---|---|---|
+| `gram::…` | `gram::conjunctiv` | The card's example uses this grammar. A card can have several. |
+| `pos::…` | `pos::verb` | The type of word: verb, noun, adjective, phrase… |
+| `batch::…` | `batch::2026-10-30` | The day the card was added. |
+
+In Anki, open **Browse**. Your tags are in the sidebar on the left. Open **gram** to see every grammar point, and click one to list its cards. You can also type a search in the bar at the top:
+
+- `tag:gram::conjunctiv`: cards whose examples use *să* + verb;
+- `tag:pos::verb tag:gram::perfect-compus`: verbs with an example in the everyday past;
+- `tag:batch::2026-10*`: everything added in October 2026.
+
+![Anki's Browse window showing the cards for one grammar point](docs/anki-browse-grammar.png)
+
+**To practise one grammar point on its own:**
+1. Choose **Tools → Create Filtered Deck**.
+2. Type a search such as `tag:gram::conjunctiv`.
+3. Press **Build**.
+
+Anki gathers those cards into a temporary deck. When you're done, delete the filtered deck, and the cards go back to their usual deck.
+
+![Creating a filtered deck for one grammar point](docs/anki-filtered-deck.png)
+
+Every grammar point and its tag is listed in the [grammar table](.agents/skills/add-romanian-words/templates/grammar-profile.seed.md): look up the Construction column, and use the name in its Tag column.
+
 Your own files (your settings, your cards' records and the audio) stay in this folder, in `my-cards/` and `.env`. They are never shared.
 
 ## For developers
