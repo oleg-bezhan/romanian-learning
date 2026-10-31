@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Romanian cards — settings</title>
+<!-- The setup page. Served only by settings_page.py on 127.0.0.1; every /api
+     call carries the token from this page's address. No external resources. -->
+<style>
+:root {
+  --bg: #f6f5f2; --card: #ffffff; --ink: #1d1d1f; --muted: #66666c; --line: #dfddd6;
+  --accent: #2f62c9; --accent-ink: #ffffff; --soft: #e9f0fc; --ok: #1d7f46; --warn: #b3261e;
+  --chip: #efede8; --mark: #fff0a8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161719; --card: #202125; --ink: #ececee; --muted: #a2a2a9; --line: #34353b;
+    --accent: #7aa4ff; --accent-ink: #0c1222; --soft: #1f2a42; --ok: #55c886; --warn: #ff8a80;
+    --chip: #2a2b30; --mark: #5c4c10;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+       font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+header, nav, main { max-width: 760px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 20px; padding-bottom: 10px; }
+h1 { font-size: 19px; margin: 0; }
+h2 { font-size: 22px; margin: 0 0 6px; }
+h3 { font-size: 16px; margin: 22px 0 4px; }
+#lang { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; flex: none; }
+#lang button { border: 0; background: var(--card); color: var(--muted); padding: 5px 10px; font: inherit; font-size: 13px; cursor: pointer; }
+#lang button.on { background: var(--accent); color: var(--accent-ink); }
+nav { display: flex; flex-wrap: wrap; gap: 6px; }
+nav a { font-size: 13px; padding: 4px 11px; border-radius: 999px; background: var(--chip); color: var(--muted); text-decoration: none; }
+nav a.on { background: var(--accent); color: var(--accent-ink); }
+main { margin-top: 14px; margin-bottom: 48px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+p.hint { color: var(--muted); margin: 0 0 14px; }
+a { color: var(--accent); }
+.opt { display: block; width: 100%; text-align: left; border: 1px solid var(--line); background: var(--card);
+       color: inherit; border-radius: 12px; padding: 11px 14px; margin: 8px 0; cursor: pointer; font: inherit; }
+.opt:hover { border-color: var(--accent); }
+.opt.on { border-color: var(--accent); background: var(--soft); box-shadow: inset 0 0 0 1px var(--accent); }
+.opt b { display: block; }
+.opt small { color: var(--muted); display: block; }
+.opt .tag { font-size: 12px; color: var(--accent); font-weight: 600; margin-left: 6px; }
+.row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
+.btn { border: 0; border-radius: 10px; padding: 10px 18px; font: inherit; cursor: pointer; background: var(--accent); color: var(--accent-ink); }
+.btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+.btn:disabled { opacity: .5; cursor: default; }
+.link { background: none; border: 0; color: var(--accent); cursor: pointer; font: inherit; padding: 0; text-decoration: underline; }
+input[type=text], input[type=password], select { width: 100%; padding: 10px 12px; border: 1px solid var(--line);
+       border-radius: 10px; background: var(--card); color: inherit; font: inherit; }
+.err { color: var(--warn); margin-top: 14px; }
+.ok { color: var(--ok); font-weight: 600; }
+.small { font-size: 13px; color: var(--muted); }
+.progress { height: 6px; background: var(--chip); border-radius: 3px; overflow: hidden; margin: 6px 0 16px; }
+.progress div { height: 100%; background: var(--accent); }
+.label { font-size: 27px; font-weight: 650; margin: 2px 0 10px; }
+ul.ex { list-style: none; padding: 0; margin: 0 0 18px; }
+ul.ex li { font-size: 19px; padding: 7px 0; border-bottom: 1px dashed var(--line); }
+b.m, ul.ex b { background: var(--mark); border-radius: 3px; padding: 0 2px; font-weight: 600; }
+.three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.three button { border: 1px solid var(--line); border-radius: 12px; padding: 12px 8px; background: var(--card);
+                color: inherit; font: inherit; cursor: pointer; }
+.three button.sug { border: 2px solid var(--accent); }
+.three button.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.three .key { display: block; font-size: 12px; opacity: .65; }
+.three .badge { display: block; font-size: 12px; margin-top: 4px; color: var(--accent); }
+.three button.on .badge { color: inherit; }
+.trow { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.trow .small b { font-weight: 600; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; flex: none; }
+.seg button { border: 0; background: var(--card); color: inherit; padding: 6px 9px; font: inherit; font-size: 13px; cursor: pointer; border-right: 1px solid var(--line); }
+.seg button:last-child { border-right: 0; }
+.seg button.sug:not(.on) { box-shadow: inset 0 -3px 0 var(--accent); }
+.seg button.on { background: var(--accent); color: var(--accent-ink); }
+.voice { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; margin: 8px 0;
+         display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; }
+.voice.on { border-color: var(--accent); background: var(--soft); }
+.voice .acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.voice .tag, h2 .tag { font-size: 12px; color: var(--accent); font-weight: 600; margin-left: 8px; }
+.note { background: var(--soft); border-radius: 12px; padding: 12px 14px; margin: 4px 0 12px; }
+.note .row { margin-top: 8px; }
+.voice .acts button { font-size: 14px; padding: 6px 12px; }
+ol.how { padding-left: 22px; margin: 6px 0 14px; }
+dl.sum { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 12px 0; }
+dl.sum dt { color: var(--muted); }
+dl.sum dd { margin: 0; }
+@media (max-width: 560px) {
+  .three { grid-template-columns: 1fr; }
+  .trow { flex-direction: column; align-items: flex-start; }
+  .card { padding: 16px; }
+}
+</style>
+</head>
+<body>
+<header><h1 id="title">Romanian cards — settings</h1><div id="lang"></div></header>
+<nav id="nav"></nav>
+<main id="main"><div class="card">…</div></main>
+<script>
+"use strict";
+const TOKEN = new URLSearchParams(location.search).get("t") || "";
+const STEPS = ["level", "grammar", "mode", "anki", "key", "voice", "done"];
+const STATUSES = ["allowed", "learning", "blocked"];
+let TX, G, S, ui, L;
+const app = { level: "", statuses: null, work: null, gview: "intro", gi: 0, mode: "quality",
+              anki: null, deck: null, newDeck: "", model: "", voices: null, voice: "", keyEdit: false,
+              summary: null, finished: false, loading: false, busy: false, err: "" };
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (k in o ? o[k] : m));
+const marked = s => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+
+async function api(path, body) {
+  const r = await fetch(path, { method: body === undefined ? "GET" : "POST",
+    headers: { "X-Token": TOKEN, "Content-Type": "application/json" },
+    body: body === undefined ? undefined : JSON.stringify(body) });
+  const ct = r.headers.get("Content-Type") || "";
+  if (r.ok && ct.startsWith("audio/")) return r.blob();
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) { const e = new Error(j.message || j.error || "HTTP " + r.status); e.code = j.message; throw e; }
+  return j;
+}
+
+function preset(level) {
+  const p = G.presets[level] || { allowed: [], learning: [] }, out = {};
+  for (const c of G.constructions)
+    out[c.tag] = p.allowed.includes(c.tag) ? "allowed" : p.learning.includes(c.tag) ? "learning" : "blocked";
+  return Object.assign(out, G.locked);
+}
+function counts(st) {
+  const n = { allowed: 0, learning: 0, blocked: 0 };
+  for (const k in st) n[st[k]]++;
+  return n;
+}
+const calibList = () => G.constructions.filter(c => !(c.tag in G.locked));
+const groupName = id => (G.groups.find(g => g.id === id) || { name: {} }).name[ui] || id;
+const route = () => location.hash.slice(1).split("/");
+const step = () => (STEPS.includes(route()[0]) ? route()[0] : "level");
+
+// #grammar/calib/7, #grammar/table, #grammar/summary open a grammar view directly
+// (setup.py page --step grammar, and the screenshot check).
+function applyRoute() {
+  const [s, view, i] = route();
+  if (s !== "grammar" || !["calib", "table", "summary", "intro"].includes(view) || !app.level) return;
+  if (!app.work) startWork();
+  app.gview = view;
+  app.gi = Math.min(Math.max(parseInt(i || "1", 10) - 1, 0), calibList().length - 1);
+}
+
+function go(s) {
+  app.err = "";
+  if (s === "done") app.summary = null;
+  if (location.hash.slice(1) === s) render(); else location.hash = s;
+  window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", () => {
+  app.err = "";
+  if (step() === "done") app.summary = null;
+  applyRoute();
+  render();
+});
+
+async function init() {
+  try {
+    [TX, G, S] = await Promise.all([fetch("/text.json").then(r => r.json()),
+                                    fetch("/grammar.json").then(r => r.json()), api("/api/state")]);
+  } catch (e) {
+    $("#main").innerHTML = '<div class="card err">This page has expired. Ask the assistant to open the settings page again.<br>' +
+      "Ця сторінка застаріла. Попросіть асистента відкрити налаштування ще раз.</div>";
+    return;
+  }
+  let saved = new URLSearchParams(location.search).get("ui");
+  try { saved = saved || localStorage.getItem("ro-cards-ui"); } catch (e) { /* storage blocked: use the default */ }
+  ui = saved && TX[saved] ? saved : S.ui;
+  app.level = G.levels.includes(S.learner.level) ? S.learner.level : "";
+  app.mode = S.learner.mode || "quality";
+  app.statuses = S.statuses ? Object.assign({}, S.statuses) : null;
+  applyRoute();
+  render();
+}
+
+function render() {
+  L = TX[ui];
+  document.documentElement.lang = ui;
+  document.title = L.title;
+  $("#title").textContent = L.title;
+  $("#lang").innerHTML = ["uk", "en"].map(l =>
+    `<button class="${l === ui ? "on" : ""}" data-ui="${l}">${l === "uk" ? "УКР" : "EN"}</button>`).join("");
+  const cur = step();
+  $("#nav").innerHTML = STEPS.map(s => `<a href="#${s}" class="${s === cur ? "on" : ""}">${esc(L.steps[s])}</a>`).join("");
+  const view = { level: vLevel, grammar: vGrammar, mode: vMode, anki: vAnki, key: vKey, voice: vVoice, done: vDone }[cur];
+  $("#main").innerHTML = `<div class="card">${view()}${app.err ? `<div class="err">${esc(app.err)}</div>` : ""}</div>`;
+  if (app.busy) document.querySelectorAll("#main button").forEach(b => (b.disabled = true));
+  const nd = $("#newdeck");
+  if (nd) nd.addEventListener("input", () => { app.newDeck = nd.value; });
+  const k = $("#key");
+  if (k) k.focus();
+  (LOADERS[cur] || (() => {}))();
+}
+
+const loading = () => `<p class="small">…</p>`;
+
+async function load(set, path) {
+  app.loading = true;
+  try { set(await api(path)); } catch (e) { app.err = fmt(L.error, { msg: e.message }); set(null, e); }
+  app.loading = false;
+  render();
+}
+const LOADERS = {
+  anki: () => { if (app.anki === null && !app.loading) load((j) => { app.anki = j || { ok: false }; }, "/api/anki"); },
+  key: () => { if (app.voices === null && !app.loading) load((j) => { app.voices = j || { key_set: false }; }, "/api/voices"); },
+  voice: () => LOADERS.key(),
+  done: () => {
+    if (app.summary || app.loading) return;
+    app.loading = true;
+    Promise.all([api("/api/state"), api("/api/anki").catch(() => ({ ok: false })),
+                 api("/api/voices").catch(() => ({ key_set: false }))])
+      .then(([s, a, v]) => { S = s; app.summary = { anki: a, voices: v }; })
+      .catch(e => { app.err = fmt(L.error, { msg: e.message }); app.summary = { anki: {}, voices: {} }; })
+      .finally(() => { app.loading = false; render(); });
+  },
+};
+
+// ---- level ---------------------------------------------------------------
+function vLevel() {
+  return `<h2>${esc(L.level_title)}</h2><p class="hint">${esc(L.level_hint)}</p>` +
+    G.levels.map(l => `<button class="opt ${app.level === l ? "on" : ""}" data-act="level" data-v="${l}">` +
+      `<b>${l}</b><small>${esc(L.levels[l])}</small></button>`).join("") +
+    `<div class="row"><button class="btn" data-act="save-level">${esc(L.next)}</button></div>`;
+}
+
+// ---- grammar -------------------------------------------------------------
+function vGrammar() {
+  if (!app.level) return `<p>${esc(L.pick_level)}</p><div class="row"><button class="btn" data-act="goto" data-v="level">${esc(L.steps.level)}</button></div>`;
+  if (app.gview === "calib") return vCalib();
+  if (app.gview === "table") return vTable();
+  if (app.gview === "summary") return vSummary();
+  const n = counts(preset(app.level));
+  return `<h2>${esc(L.grammar_title)}</h2><p class="hint">${esc(L.grammar_intro)}</p>` +
+    `<button class="opt" data-act="g-suggested"><b>${esc(fmt(L.grammar_suggested, { level: app.level }))}<span class="tag">${esc(L.recommended)}</span></b>` +
+    `<small>${esc(fmt(L.grammar_suggested_hint, n))}</small></button>` +
+    `<button class="opt" data-act="g-check"><b>${esc(L.grammar_check)}</b><small>${esc(fmt(L.grammar_check_hint, { n: calibList().length }))}</small></button>` +
+    (app.statuses ? `<button class="opt" data-act="g-keep"><b>${esc(L.grammar_keep)}</b><small>${esc(L.grammar_keep_hint)}</small></button>` : "") +
+    `<div class="row"><button class="link" data-act="g-table">${esc(L.grammar_table)}</button></div>`;
+}
+
+function vCalib() {
+  const list = calibList(), c = list[app.gi], sug = preset(app.level)[c.tag], cur = app.work[c.tag];
+  return `<div class="small">${esc(fmt(L.calib_count, { i: app.gi + 1, n: list.length }))} · ${esc(groupName(c.group))}</div>` +
+    `<div class="progress"><div style="width:${Math.round(100 * app.gi / list.length)}%"></div></div>` +
+    `<div class="label">${esc(c.label)}</div><p class="hint">${esc(L.calib_help)}</p>` +
+    `<ul class="ex">${c.examples.map(e => `<li>${marked(e)}</li>`).join("")}</ul>` +
+    `<div class="three">` + STATUSES.map((s, i) =>
+      `<button class="${s === sug ? "sug" : ""} ${s === cur ? "on" : ""}" data-act="g-pick" data-v="${s}">` +
+      `<span class="key">${i + 1}</span>${esc(L.btn[s])}` +
+      (s === sug ? `<span class="badge">★ ${esc(fmt(L.suggested_badge, { level: app.level }))}</span>` : "") +
+      `</button>`).join("") + `</div>` +
+    `<div class="row"><button class="btn ghost" data-act="g-back">← ${esc(L.back)}</button>` +
+    `<button class="link" data-act="g-rest">${esc(L.rest)} »</button>` +
+    `<button class="link" data-act="g-table">${esc(L.grammar_table)}</button></div>`;
+}
+
+function vTable() {
+  const sug = preset(app.level);
+  let h = `<h2>${esc(L.grammar_title)}</h2><p class="hint">${esc(L.summary_explain)}</p>`;
+  for (const g of G.groups) {
+    h += `<h3>${esc(groupName(g.id))}</h3>`;
+    for (const c of G.constructions.filter(x => x.group === g.id)) {
+      const seg = c.tag in G.locked ? `<span class="small">${esc(L.locked)}</span>` :
+        `<span class="seg">` + STATUSES.map(s =>
+          `<button class="${s === sug[c.tag] ? "sug" : ""} ${s === app.work[c.tag] ? "on" : ""}" data-act="g-set" data-tag="${c.tag}" data-v="${s}"` +
+          ` title="${s === sug[c.tag] ? esc(fmt(L.suggested_badge, { level: app.level })) : ""}">${esc(L.btn[s])}</button>`).join("") + `</span>`;
+      h += `<div class="trow"><div><b>${esc(c.label)}</b><div class="small">${marked(c.examples[0])}</div></div>${seg}</div>`;
+    }
+  }
+  return h + `<p class="small" style="margin-top:14px">▁ = ${esc(fmt(L.suggested_badge, { level: app.level }))}</p>` +
+    `<p>${esc(fmt(L.summary_counts, counts(app.work)))}</p>` +
+    `<div class="row"><button class="btn" data-act="g-save">${esc(L.save)}</button></div>`;
+}
+
+function vSummary() {
+  return `<h2>${esc(L.summary_title)}</h2><p style="font-size:18px">${esc(fmt(L.summary_counts, counts(app.work)))}</p>` +
+    `<p class="hint">${esc(L.summary_explain)}</p>` +
+    `<div class="row"><button class="btn" data-act="g-save">${esc(L.save)}</button>` +
+    `<button class="link" data-act="g-table">${esc(L.review_table)}</button></div>`;
+}
+
+// ---- mode ----------------------------------------------------------------
+function vMode() {
+  return `<h2>${esc(L.mode_title)}</h2><p class="hint">${esc(L.mode_intro)}</p>` +
+    S.modes.map(m => `<button class="opt ${app.mode === m ? "on" : ""}" data-act="mode" data-v="${m}">` +
+      `<b>${esc(L.modes[m][0])}${m === "quality" ? `<span class="tag">${esc(L.recommended)}</span>` : ""}</b>` +
+      `<small>${esc(L.modes[m][1])}</small></button>`).join("") +
+    `<div class="row"><button class="btn" data-act="save-mode">${esc(L.next)}</button></div>`;
+}
+
+// ---- anki ----------------------------------------------------------------
+function vAnki() {
+  const a = app.anki;
+  let h = `<h2>${esc(L.anki_title)}</h2>`;
+  if (a === null) return h + loading();
+  if (!a.ok) return h + `<p>${esc(L.anki_closed)}</p><div class="row"><button class="btn" data-act="anki-retry">${esc(L.retry)}</button></div>`;
+  const names = a.decks.map(d => d.name);
+  if (app.deck === null)
+    app.deck = a.deck && names.includes(a.deck) ? a.deck : names.includes(L.deck_default) ? L.deck_default : "\u0000new";
+  if (!app.newDeck) app.newDeck = L.deck_default;
+  const usable = a.models.filter(m => m.ok).map(m => m.name);
+  if (!usable.includes(app.model))
+    app.model = usable.includes(a.model) ? a.model : usable.includes("Basic") ? "Basic" : usable[0] || "";
+  h += `<h3>${esc(L.deck_label)}</h3>` + a.decks.map(d =>
+    `<button class="opt ${app.deck === d.name ? "on" : ""}" data-act="deck" data-v="${esc(d.name)}"><b>${esc(d.name)}</b>` +
+    `<small>${esc(fmt(L.deck_cards, { n: d.cards }))}</small></button>`).join("") +
+    `<div class="opt ${app.deck === "\u0000new" ? "on" : ""}" data-act="deck" data-v="\u0000new"><b>${esc(L.deck_new)}</b>` +
+    `<input type="text" id="newdeck" value="${esc(app.newDeck)}"></div>` +
+    `<h3>${esc(L.model_label)}</h3><select id="model">` + a.models.map(m =>
+      `<option value="${esc(m.name)}" ${m.ok ? "" : "disabled"} ${m.name === app.model ? "selected" : ""}>${esc(m.name)}${m.ok ? "" : " " + esc(L.model_unusable)}</option>`).join("") +
+    `</select><p class="small">${esc(L.model_hint)}</p>` +
+    `<div class="row"><button class="btn" data-act="save-anki">${esc(L.next)}</button></div>`;
+  return h;
+}
+
+// ---- key -----------------------------------------------------------------
+function vKey() {
+  const v = app.voices;
+  let h = `<h2>${esc(L.key_title)}</h2>`;
+  if (v === null) return h + loading();
+  if (v.key_ok && !app.keyEdit)
+    return h + `<p class="ok">✓ ${esc(L.key_ok)}</p><div class="row"><button class="btn" data-act="goto" data-v="voice">${esc(L.next)}</button>` +
+      `<button class="link" data-act="key-edit">${esc(L.key_replace)}</button></div>`;
+  h += `<p class="hint">${esc(L.key_intro)}</p><ol class="how">${L.key_how.map(s => `<li>${esc(s)}</li>`).join("")}</ol>` +
+    `<p><a href="https://elevenlabs.io/app/settings/api-keys" target="_blank" rel="noopener">${esc(L.key_open)} ↗</a></p>` +
+    `<input type="password" id="key" autocomplete="off" spellcheck="false" placeholder="${esc(L.key_placeholder)}">` +
+    `<div class="row"><button class="btn" data-act="save-key">${esc(L.save)}</button></div>`;
+  if (v.key_set && !v.key_ok && !app.err) h += `<div class="err">${esc(L.key_err[v.error] || L.key_err.refused)}</div>`;
+  return h;
+}
+
+// ---- voice ---------------------------------------------------------------
+function vVoice() {
+  const v = app.voices;
+  let h = `<h2>${esc(L.voice_title)}</h2>`;
+  if (v === null) return h + loading();
+  if (!v.key_ok) return h + `<p>${esc(L.voice_need_key)}</p><div class="row"><button class="btn" data-act="goto" data-v="key">${esc(L.steps.key)}</button></div>`;
+  const rec = v.recommended;
+  if (!app.voice) app.voice = v.voice_id || (rec.in_account ? rec.id : "");
+  h += `<p class="hint">${esc(L.voice_intro)} ${esc(L.voice_ro_cost)}</p>`;
+  if (!rec.in_account)
+    h += `<div class="note">${esc(fmt(L.voice_rec, { name: rec.name }))}<div class="row" style="margin-top:8px">` +
+      `<a href="https://elevenlabs.io/app/voice-library" target="_blank" rel="noopener">${esc(L.voice_library_open)} ↗</a>` +
+      `<button class="link" data-act="v-refresh">${esc(L.voice_refresh)}</button></div></div>`;
+  h += v.voices.map(x =>
+    `<div class="voice ${app.voice === x.id ? "on" : ""}"><div><b>${esc(x.name)}</b>` +
+    (x.id === rec.id ? `<span class="tag">${esc(L.recommended)}</span>` : "") +
+    `<div class="small">${esc(x.labels.join(", "))}</div></div>` +
+    `<div class="acts">` +
+    (x.preview_url ? `<button class="btn ghost" data-act="v-prev" data-url="${esc(x.preview_url)}">▶ ${esc(L.voice_preview)}</button>` : "") +
+    `<button class="btn ghost" data-act="v-ro" data-v="${esc(x.id)}">▶ ${esc(L.voice_ro)}</button>` +
+    `<button class="btn ${app.voice === x.id ? "" : "ghost"}" data-act="v-pick" data-v="${esc(x.id)}">${app.voice === x.id ? "✓ " + esc(L.voice_chosen) : esc(L.voice_choose)}</button>` +
+    `</div></div>`).join("") +
+    `<div class="row"><button class="btn" data-act="save-voice">${esc(L.next)}</button></div>`;
+  return h;
+}
+
+// ---- done ----------------------------------------------------------------
+function vDone() {
+  if (app.finished) return `<h2>${esc(L.done_title)}</h2><p>${esc(L.done_closed)}</p>`;
+  if (!app.summary) return `<h2>${esc(L.done_title)}</h2>` + loading();
+  const T = L.summary, a = app.summary.anki, v = app.summary.voices;
+  const level = G.levels.includes(S.learner.level) ? S.learner.level : "";
+  const voice = (v.voices || []).find(x => x.id === v.voice_id);
+  const rows = [
+    ["level", level], ["grammar", S.statuses ? fmt(L.summary_counts, counts(S.statuses)) : ""],
+    ["mode", L.modes[S.learner.mode] ? L.modes[S.learner.mode][0] : ""],
+    ["anki", a.ok && a.deck && a.decks.some(d => d.name === a.deck) ? `${a.deck} · ${a.model}` : ""],
+    ["key", v.key_ok ? "✓ " + T.ok : ""], ["voice", voice ? voice.name : ""]];
+  const missing = rows.filter(r => !r[1]).map(r => r[0]);
+  return `<h2>${esc(missing.length ? L.steps.done : L.done_title)}</h2><dl class="sum">` +
+    rows.map(([k, val]) => `<dt>${esc(T[k])}</dt><dd>${val ? esc(val) : `<a href="#${k}">${esc(T.missing)}</a>`}</dd>`).join("") +
+    `</dl>` + (missing.length ? `<p class="err">${esc(L.done_missing)} ${missing.map(k => esc(L.steps[k])).join(", ")}</p>` :
+    `<p>${esc(L.done_text)}</p>`) +
+    `<div class="row"><button class="btn" data-act="finish">${esc(L.done_button)}</button></div>`;
+}
+
+// ---- actions -------------------------------------------------------------
+async function save(name, body, next) {
+  app.busy = true;
+  render();
+  try {
+    await api("/api/save/" + name, body);
+    app.err = "";
+    app.busy = false;
+    next();
+  } catch (e) {
+    app.busy = false;
+    app.err = name === "key" ? (L.key_err[e.code] || fmt(L.error, { msg: e.message })) :
+              e.code === "anki-closed" ? L.anki_closed : fmt(L.error, { msg: e.message });
+  }
+  render();
+}
+
+function startWork() {
+  app.work = Object.assign({}, preset(app.level), app.statuses || {}, G.locked);
+}
+
+const ACTIONS = {
+  goto: d => go(d.v),
+  level: d => { app.level = d.v; render(); },
+  "save-level": () => {
+    if (!app.level) { app.err = L.pick_level; return render(); }
+    save("level", { level: app.level }, () => { app.gview = "intro"; go("grammar"); });
+  },
+  "g-suggested": () => {
+    app.work = preset(app.level);
+    save("grammar", { statuses: app.work }, () => { app.statuses = Object.assign({}, app.work); go("mode"); });
+  },
+  "g-check": () => { startWork(); app.gi = 0; app.gview = "calib"; render(); window.scrollTo(0, 0); },
+  "g-keep": () => go("mode"),
+  "g-table": () => { if (!app.work) startWork(); app.gview = "table"; render(); window.scrollTo(0, 0); },
+  "g-pick": d => {
+    const list = calibList();
+    app.work[list[app.gi].tag] = d.v;
+    app.gi += 1;
+    if (app.gi >= list.length) app.gview = "summary";
+    render();
+  },
+  "g-back": () => { if (app.gi > 0) app.gi -= 1; else app.gview = "intro"; render(); },
+  "g-rest": () => {
+    const list = calibList(), sug = preset(app.level);
+    for (let i = app.gi; i < list.length; i++) app.work[list[i].tag] = sug[list[i].tag];
+    app.gview = "summary";
+    render();
+  },
+  "g-set": d => { app.work[d.tag] = d.v; render(); },
+  "g-save": () => save("grammar", { statuses: app.work }, () => {
+    app.statuses = Object.assign({}, app.work); app.gview = "intro"; go("mode");
+  }),
+  mode: d => { app.mode = d.v; render(); },
+  "save-mode": () => save("mode", { mode: app.mode }, () => go("anki")),
+  "anki-retry": () => { app.anki = null; app.err = ""; render(); },
+  deck: d => { app.deck = d.v; render(); const nd = $("#newdeck"); if (d.v === "\u0000new" && nd) nd.focus(); },
+  "save-anki": () => {
+    const m = $("#model");
+    if (m) app.model = m.value;
+    const isNew = app.deck === "\u0000new";
+    const deck = isNew ? app.newDeck.trim() : app.deck;
+    if (!deck) return;
+    save("anki", { deck, new_deck: isNew, model: app.model }, () => { app.anki = null; app.deck = null; go("key"); });
+  },
+  "key-edit": () => { app.keyEdit = true; render(); },
+  "save-key": () => {
+    const key = ($("#key") || {}).value || "";
+    save("key", { key: key.trim() }, () => { app.voices = null; app.keyEdit = false; go("voice"); });
+  },
+  "v-prev": d => { new Audio(d.url).play().catch(() => {}); },
+  "v-ro": async (d, el) => {
+    el.disabled = true;
+    try {
+      const blob = await api("/api/sample", { voice_id: d.v });
+      new Audio(URL.createObjectURL(blob)).play().catch(() => {});
+    } catch (e) { app.err = fmt(L.error, { msg: e.message }); render(); }
+    el.disabled = false;
+  },
+  "v-pick": d => { app.voice = d.v; render(); },
+  "v-refresh": () => { app.voices = null; render(); },
+  "save-voice": () => {
+    if (!app.voice) { app.err = L.voice_pick; return render(); }
+    save("voice", { voice_id: app.voice }, () => go("done"));
+  },
+  finish: async () => {
+    try { await api("/api/done", {}); } catch (e) { /* already stopped */ }
+    app.finished = true;
+    render();
+  },
+};
+
+document.addEventListener("click", e => {
+  const u = e.target.closest("[data-ui]");
+  if (u) { ui = u.dataset.ui; try { localStorage.setItem("ro-cards-ui", ui); } catch (x) { /* ignore */ } return render(); }
+  const b = e.target.closest("[data-act]");
+  if (!b || b.disabled || app.busy || e.target.id === "newdeck") {
+    if (b && e.target.id === "newdeck" && app.deck !== "\u0000new") { app.deck = "\u0000new"; render(); $("#newdeck").focus(); }
+    return;
+  }
+  const f = ACTIONS[b.dataset.act];
+  if (f) f(b.dataset, b);
+});
+
+document.addEventListener("keydown", e => {
+  if (step() !== "grammar" || app.gview !== "calib" || e.target.tagName === "INPUT") return;
+  const i = ["1", "2", "3"].indexOf(e.key);
+  if (i >= 0) { ACTIONS["g-pick"]({ v: STATUSES[i] }); e.preventDefault(); }
+  else if (e.key === "Backspace" || e.key === "ArrowLeft") { ACTIONS["g-back"](); e.preventDefault(); }
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target.id === "key") ACTIONS["save-key"]();
+});
+
+init();
+</script>
+</body>
+</html>

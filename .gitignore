@@ -1,0 +1,23 @@
+# Your settings: they hold your ElevenLabs key. Never commit.
+.env
+
+# Your own cards' records, learner profile, grammar history, audio and logs
+my-cards/
+
+# The project's own Python (installed by .agents/skills/setup/bootstrap.ps1)
+runtime/
+
+# Local Anki backups
+backups/
+
+# Python
+__pycache__/
+*.pyc
+
+# Eval runs, their history, and the snapshot of your own deck they run against
+.agents/skills/add-romanian-words/evals/runs/
+.agents/skills/add-romanian-words/evals/results.jsonl
+.agents/skills/add-romanian-words/evals/fixtures/
+
+# Claude Code's local settings
+.claude/settings.local.json

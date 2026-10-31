@@ -1,0 +1,23 @@
+{
+  "about": "Fixed inputs for `run.py skill`. Each word must be absent from fixtures/collection.json except the `duplicate` ones. headword = the exact <b> text expected (stress from DEX, checked 2026-10-30); plain = acceptable headwords with markup removed, when the exact form may vary.",
+  "learner": {"language": "Ukrainian", "level": "B1"},
+  "cases": [
+    {"input": "a împinge", "headword": ["a împ<u>i</u>nge, împ<u>i</u>ng"], "pos": "verb",
+     "tests": "irregular 3rd-conjugation verb, stress on both parts"},
+    {"input": "un morcov", "headword": ["un m<u>o</u>rcov, doi m<u>o</u>rcovi"], "pos": "noun",
+     "tests": "masculine noun; stress is NOT on the last syllable"},
+    {"input": "un frigider", "headword": ["un frigid<u>e</u>r, două frigid<u>e</u>re"], "pos": "noun",
+     "tests": "neuter noun: două + -e plural"},
+    {"input": "a preda", "headword": ["a pred<u>a</u>, pred<u>a</u>u"], "pos": "verb",
+     "tests": "polysemous verb (hand over / teach), irregular 1sg"},
+    {"input": "a se însera", "headword": ["a (se) înser<u>a</u>, (se) însere<u>a</u>ză"], "pos": "verb",
+     "tests": "impersonal reflexive: 3sg instead of 1sg; no clitic-friendly object"},
+    {"input": "zgomotos", "headword": ["zgomot<u>o</u>s"], "pos": "adjective",
+     "tests": "adjective: bare masculine"},
+    {"input": "a avea chef (de)", "plain": ["a avea chef", "a avea chef (de)", "a avea chef de", "a avea chef de ceva",
+               "a avea chef (de / să)", "a avea chef (de/să)", "a avea chef (să)"],
+     "pos": "phrase", "tests": "fixed expression: register question to the reviewer"},
+    {"input": "a repara", "duplicate": true,
+     "tests": "already on a card: must be skipped, not carded"}
+  ]
+}

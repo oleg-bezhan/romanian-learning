@@ -1,0 +1,22 @@
+{
+  "about": "Fixed A1-A2 words for `run.py skill --learner A1|A2 --cases cases-low.json`: does the skill still write good, level-appropriate cards for a beginner? None is in fixtures/collection.json (checked in BOTH fields: older cards keep the Romanian on the front) except the duplicate. Stress from DEX, checked 2026-10-31.",
+  "learner": {"language": "Ukrainian", "level": "A1"},
+  "cases": [
+    {"input": "a suna", "headword": ["a sun<u>a</u>, sun"], "pos": "verb",
+     "tests": "natural examples want a person as object (o sun pe mama): pe-acuzativ is blocked at A1"},
+    {"input": "a explica", "headword": ["a explic<u>a</u>, expl<u>i</u>c"], "pos": "verb",
+     "tests": "wants a dative recipient (îi explic), only learning at A1"},
+    {"input": "a se împrieteni", "plain": ["a (se) împrieteni, (mă) împrietenesc", "a se împrieteni, mă împrietenesc"],
+     "pos": "verb", "tests": "reflexive verb: reflexiv-acuzativ is allowed at A1"},
+    {"input": "o umbrelă", "headword": ["o umbr<u>e</u>lă, două umbr<u>e</u>le"], "pos": "noun",
+     "tests": "feminine noun, -ă/-e plural"},
+    {"input": "o bucătărie", "headword": ["o bucătăr<u>i</u>e, două bucătăr<u>i</u>i"], "pos": "noun",
+     "tests": "feminine noun, -ie/-ii plural; kitchen vs cuisine"},
+    {"input": "ieftin", "headword": ["i<u>e</u>ftin"], "pos": "adjective",
+     "tests": "adjective: bare masculine"},
+    {"input": "obosit", "headword": ["obos<u>i</u>t"], "pos": "adjective",
+     "tests": "adjective already inside another card's example, not a card itself"},
+    {"input": "a repara", "duplicate": true,
+     "tests": "already on a card: must be skipped, not carded"}
+  ]
+}
